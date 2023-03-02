@@ -9,3 +9,9 @@ class BaseUser(BaseModel):
 
 class CreateUserRequest(BaseUser):
     pass
+
+
+class UpdateUserRequest(BaseUser):
+    username: str | None = None
+    email: str | None = None
+    password: str | None = None

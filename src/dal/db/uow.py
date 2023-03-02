@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.dal.db.repositories.user import UserRepository
+from src.dal.db.repositories import UserRepository
 
 
 class SqlAlchemyUOW:
@@ -14,7 +14,13 @@ class SqlAlchemyUOW:
         await self.session.rollback()
 
 
-class UnitOfWork(SqlAlchemyUOW):
-    def __init__(self, session: AsyncSession):
-        super().__init__(session)
+class BlogHolder:
+    def __init__(self, session: AsyncSession) -> None:
         self.user_repo = UserRepository(session)
+
+
+class UnitOfWork(SqlAlchemyUOW):
+    def __init__(self, session: AsyncSession) -> None:
+        super().__init__(session)
+
+        self.blog_holder = BlogHolder(session)
