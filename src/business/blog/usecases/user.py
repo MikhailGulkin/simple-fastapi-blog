@@ -1,17 +1,17 @@
-from abc import ABC
 
-from src.business.dto.user import (
+from src.business.blog.dto.user import (
     CreateUserDTO,
     UserDTO,
     UpdateUserDTO
 )
+from src.business.common.usecases.base import BaseUseCase
 
 from src.dal.db.uow import UnitOfWork
 
 
-class UserUseCase(ABC):
+class UserUseCase(BaseUseCase):
     def __init__(self, uow: UnitOfWork) -> None:
-        self.uow = uow
+        super().__init__(uow)
 
 
 class CreateUser(UserUseCase):
@@ -25,7 +25,7 @@ class CreateUser(UserUseCase):
 
 class GetUserById(UserUseCase):
     async def __call__(self, id_: int) -> UserDTO:
-        user = await self.uow.blog_holder.user_repo.get_by_id(
+        user = await self.uow.blog_holder.user_repo.get_user_by_id(
             id_
         )
         return user

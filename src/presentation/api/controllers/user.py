@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from fastapi.params import Depends
 
-from src.business.dto import (
+from src.business.blog.dto import (
     CreateUserDTO,
     UserDTO,
     UpdateUserDTO
 )
-from src.business.user.usecases import UserServices
+from src.business.blog.usecases import UserServices
 
 from src.presentation.api.controllers.requests.user import (
     CreateUserRequest,
@@ -22,14 +22,6 @@ router = APIRouter(
 )
 
 
-@router.post('/create-user')
-async def create_user(
-        user: CreateUserRequest,
-        user_services: UserServices = Depends(get_user_services),
-) -> UserDTO:
-    return await user_services.create_user(CreateUserDTO(**user.dict()))
-
-
 @router.get('/get-user')
 async def get_user_by_id(
         id_: int,
@@ -39,10 +31,19 @@ async def get_user_by_id(
 
 
 @router.get('/get-all-user')
-async def get_user_by_id(
+async def get_all_users(
         user_services: UserServices = Depends(get_user_services)
 ) -> list[UserDTO]:
-    return await user_services.get_all_users()
+    users = await user_services.get_all_users()
+    return users
+
+
+@router.post('/create-user')
+async def create_user(
+        user: CreateUserRequest,
+        user_services: UserServices = Depends(get_user_services),
+) -> UserDTO:
+    return await user_services.create_user(CreateUserDTO(**user.dict()))
 
 
 @router.patch('/update-user')

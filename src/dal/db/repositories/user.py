@@ -1,12 +1,12 @@
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.business.dto.user import CreateUserDTO
-from src.dal.db.models.user import User
+from src.business.blog.dto import CreateUserDTO
+from src.dal.db.models import User
 from src.dal.db.repositories.base import BaseRepository
 
 
-class UserRepository(BaseRepository):
+class UserRepository(BaseRepository[User]):
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
         super().__init__(User, session)
