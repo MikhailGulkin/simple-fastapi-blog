@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from fastapi.params import Depends
 
-from src.business.blog.dto import (
+from src.domain.blog.dto import (
     CreateUserDTO,
     UserDTO,
     UpdateUserDTO
 )
-from src.business.blog.usecases import UserServices
+from src.domain.blog.usecases import UserServices
 
 from src.presentation.api.controllers.requests.user import (
     CreateUserRequest,

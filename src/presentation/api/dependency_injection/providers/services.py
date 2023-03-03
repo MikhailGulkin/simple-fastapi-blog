@@ -1,6 +1,6 @@
 from fastapi import Depends
 
-from src.business.blog.usecases import (
+from src.domain.blog.usecases import (
     UserServices,
     PostServices
 )

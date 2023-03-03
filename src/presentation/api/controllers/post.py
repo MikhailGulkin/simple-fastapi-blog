@@ -1,16 +1,20 @@
 from fastapi import APIRouter
 from fastapi.params import Depends
 
-from src.business.blog.dto import (
+from src.domain.blog.dto import (
     CreatePostDTO,
     PostDTO,
     UpdatePostDTO
 
 )
-from src.business.blog.usecases import PostServices
+from src.domain.blog.exceptions import PostNotExists
+from src.domain.blog.usecases import PostServices
 
 from src.presentation.api.controllers.requests import (
     CreatePostRequest, UpdatePostRequest,
+)
+from src.presentation.api.controllers.responses.exceptions import (
+    PostAlreadyExistsError
 )
 from src.presentation.api.dependency_injection.providers.services import (
     get_post_services
@@ -42,8 +46,11 @@ async def get_post_by_id(
 async def get_post_by_id(
         id_: int,
         post_services: PostServices = Depends(get_post_services)
-) -> PostDTO:
-    return await post_services.get_post_by_id(id_)
+) -> PostDTO | PostAlreadyExistsError:
+    try:
+        await post_services.get_post_by_id(id_)
+    except PostNotExists:
+        return PostAlreadyExistsError()
 
 
 @router.patch('/update-post')

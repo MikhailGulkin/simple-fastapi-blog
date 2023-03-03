@@ -1,17 +1,11 @@
-
-from src.business.blog.dto.user import (
+from src.domain.blog.dto.user import (
     CreateUserDTO,
     UserDTO,
     UpdateUserDTO
 )
-from src.business.common.usecases.base import BaseUseCase
+from src.domain.blog.interfaces import UserUseCase
 
 from src.dal.db.uow import UnitOfWork
-
-
-class UserUseCase(BaseUseCase):
-    def __init__(self, uow: UnitOfWork) -> None:
-        super().__init__(uow)
 
 
 class CreateUser(UserUseCase):

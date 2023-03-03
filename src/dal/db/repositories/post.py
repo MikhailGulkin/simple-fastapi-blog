@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.business.blog.dto import CreatePostDTO
+from src.domain.blog.dto import CreatePostDTO
 from src.dal.db.models import Post
 from src.dal.db.repositories.base import BaseRepository
 

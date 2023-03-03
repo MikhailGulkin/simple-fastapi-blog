@@ -1,23 +1,21 @@
-from src.business.blog.dto import UpdatePostDTO
-from src.business.blog.dto.post import (
-    CreatePostDTO, PostDTO,
+from src.domain.blog.dto import UpdatePostDTO
+from src.domain.blog.dto.post import (
+    CreatePostDTO,
+    PostDTO,
 )
-from src.business.common.usecases.base import BaseUseCase
+from src.domain.blog.exceptions import PostNotExists
+from src.domain.blog.interfaces import PostUseCase
 
 from src.dal.db.uow import UnitOfWork
 
 
-class PostUseCase(BaseUseCase):
-    def __init__(self, uow: UnitOfWork) -> None:
-        super().__init__(uow)
-
-
 class GetPostById(PostUseCase):
     async def __call__(self, id_: int) -> PostDTO:
-        post = await self.uow.blog_holder.post_repo.get_post_by_id(
-            id_
-        )
-        return post
+        if post := await self.uow.blog_holder.post_repo.get_post_by_id(
+                id_
+        ):
+            return post
+        raise PostNotExists
 
 
 class CreatePost(PostUseCase):
