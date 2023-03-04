@@ -1,14 +1,14 @@
 from sqlalchemy import String
 from sqlalchemy.orm import (
     Mapped,
-    mapped_column
+    mapped_column, relationship
 )
 
 from src.dal.db.models.base import BaseAlchemyModels
 
 
 class User(BaseAlchemyModels):
-    __tablename__ = 'User'
+    __tablename__ = 'user_table'
 
     id: Mapped[int] = mapped_column(
         primary_key=True
@@ -29,3 +29,4 @@ class User(BaseAlchemyModels):
         nullable=False,
     )
 
+    posts: Mapped[list["Post"]] = relationship(back_populates="user")

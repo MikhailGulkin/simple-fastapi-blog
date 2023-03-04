@@ -12,7 +12,7 @@ from src.presentation.api.controllers.requests.user import (
     CreateUserRequest,
     UpdateUserRequest
 )
-from src.presentation.api.dependency_injection.providers.services import (
+from src.presentation.api.di.providers.services import (
     get_user_services
 )
 

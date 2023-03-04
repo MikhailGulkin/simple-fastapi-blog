@@ -1,3 +1,4 @@
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.domain.blog.dto import CreatePostDTO
@@ -39,3 +40,9 @@ class PostRepository(BaseRepository[Post]):
             **kwargs
     ) -> None:
         await super().update_obj(id_, **kwargs)
+
+    async def delete_post(
+            self,
+            id_: int
+    ) -> None:
+        await super().delete_obj(id_)

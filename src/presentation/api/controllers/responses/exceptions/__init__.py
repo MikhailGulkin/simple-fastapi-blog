@@ -1,1 +1,1 @@
-from .post import PostAlreadyExistsError
+from .post import NotFoundPostError

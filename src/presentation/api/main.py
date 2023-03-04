@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from src.config import get_settings
 from src.dal.db.main import create_engine, build_sessions
 from .controllers import setup_controllers
-from .dependency_injection import setup_di
+from .di import setup_di
 
 
 def build_app() -> FastAPI:

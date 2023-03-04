@@ -42,6 +42,21 @@ class UpdatePost(PostUseCase):
                 exclude=set('id')
             )
         )
+        await self.uow.commit()
+
+
+class DeletePost(PostUseCase):
+    async def __call__(self, id_: int) -> None:
+        if await self.uow.blog_holder.post_repo.get_post_by_id(
+                id_
+        ):
+            await self.uow.blog_holder.post_repo.delete_post(
+                id_
+            )
+            await self.uow.commit()
+            return
+        raise PostNotExists
+
 
 
 class PostServices:
@@ -63,3 +78,9 @@ class PostServices:
     ) -> PostDTO:
         await UpdatePost(self.uow)(update_post_dto)
         return await GetPostById(self.uow)(update_post_dto.id)
+
+    async def delete_post(
+            self,
+            id_: int
+    ) -> None:
+        await DeletePost(self.uow)(id_)

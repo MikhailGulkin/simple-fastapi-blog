@@ -4,7 +4,7 @@ from typing import (
 )
 from sqlalchemy import (
     select,
-    update,
+    update, delete,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -28,4 +28,8 @@ class BaseRepository(Generic[Model]):
 
     async def update_obj(self, id_: int, **kwargs) -> None:
         query = update(self._model).where(self._model.id == id_).values(kwargs)
+        await self._session.execute(query)
+
+    async def delete_obj(self, id_: int) -> None:
+        query = delete(self._model).where(self._model.id == id_)
         await self._session.execute(query)

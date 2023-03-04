@@ -40,6 +40,7 @@ class UpdateUser(UserUseCase):
                 exclude=set('id')
             )
         )
+        await self.uow.commit()
 
 
 class UserServices:

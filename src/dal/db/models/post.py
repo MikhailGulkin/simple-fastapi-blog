@@ -7,20 +7,20 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import (
     Mapped,
-    mapped_column
+    mapped_column, relationship
 )
 
 from src.dal.db.models.base import BaseAlchemyModels
 
 
 class Post(BaseAlchemyModels):
-    __tablename__ = 'Post'
+    __tablename__ = 'post_table'
 
     id: Mapped[int] = mapped_column(
         primary_key=True
     )
     author_id: Mapped[int] = mapped_column(
-        ForeignKey('User.id'),
+        ForeignKey('user_table.id'),
         nullable=False
     )
     title: Mapped[str] = mapped_column(
@@ -39,3 +39,5 @@ class Post(BaseAlchemyModels):
         TIMESTAMP(timezone=True),
         default=datetime.now()
     )
+
+    user: Mapped["User"] = relationship(back_populates="posts")
