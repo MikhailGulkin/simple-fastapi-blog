@@ -8,7 +8,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.dal.db.models.base import BaseAlchemyModels
+from src.infrastructure.db.models.base import BaseAlchemyModels
 
 Model = TypeVar("Model", bound=BaseAlchemyModels)
 

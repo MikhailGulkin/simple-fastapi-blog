@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from src.config import get_settings
-from src.dal.db.main import create_engine, build_sessions
+from src.infrastructure.db.main import create_engine, build_sessions
 from .controllers import setup_controllers
 from .di import setup_di
 

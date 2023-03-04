@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 
-from src.dal.db.uow import UnitOfWork
+from src.infrastructure.db.uow import UnitOfWork
 
 
 class DataBaseProvider:

@@ -4,7 +4,7 @@ from sqlalchemy.orm import (
     mapped_column, relationship
 )
 
-from src.dal.db.models.base import BaseAlchemyModels
+from src.infrastructure.db.models.base import BaseAlchemyModels
 
 
 class User(BaseAlchemyModels):

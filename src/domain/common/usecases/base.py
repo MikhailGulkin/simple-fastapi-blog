@@ -1,6 +1,6 @@
 from abc import ABC
 
-from src.dal.db.uow import UnitOfWork
+from src.infrastructure.db.uow import UnitOfWork
 
 
 class BaseUseCase(ABC):

@@ -6,7 +6,7 @@ from src.domain.blog.dto.post import (
 from src.domain.blog.exceptions import PostNotExists
 from src.domain.blog.interfaces import PostUseCase
 
-from src.dal.db.uow import UnitOfWork
+from src.infrastructure.db.uow import UnitOfWork
 
 
 class GetPostById(PostUseCase):
@@ -56,7 +56,6 @@ class DeletePost(PostUseCase):
             await self.uow.commit()
             return
         raise PostNotExists
-
 
 
 class PostServices:

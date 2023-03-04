@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.dal.db.repositories import UserRepository, PostRepository
+from src.infrastructure.db.repositories import UserRepository, PostRepository
 
 
 class SqlAlchemyUOW:

@@ -1,5 +1,5 @@
 from src.domain.common.usecases.base import BaseUseCase
-from src.dal.db.uow import UnitOfWork
+from src.infrastructure.db.uow import UnitOfWork
 
 
 class PostUseCase(BaseUseCase):

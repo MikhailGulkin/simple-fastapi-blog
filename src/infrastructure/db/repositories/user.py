@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.domain.blog.dto import CreateUserDTO
-from src.dal.db.models import User
-from src.dal.db.repositories.base import BaseRepository
+from src.infrastructure.db.models import User
+from src.infrastructure.db.repositories.base import BaseRepository
 
 
 class UserRepository(BaseRepository[User]):
@@ -37,3 +37,9 @@ class UserRepository(BaseRepository[User]):
             **kwargs
     ) -> None:
         await super().update_obj(id_, **kwargs)
+
+    async def delete_user(
+            self,
+            id_: int
+    ):
+        await super().delete_obj(id_)

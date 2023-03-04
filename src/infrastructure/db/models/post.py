@@ -10,7 +10,7 @@ from sqlalchemy.orm import (
     mapped_column, relationship
 )
 
-from src.dal.db.models.base import BaseAlchemyModels
+from src.infrastructure.db.models.base import BaseAlchemyModels
 
 
 class Post(BaseAlchemyModels):
@@ -20,7 +20,10 @@ class Post(BaseAlchemyModels):
         primary_key=True
     )
     author_id: Mapped[int] = mapped_column(
-        ForeignKey('user_table.id'),
+        ForeignKey(
+            'user_table.id',
+            ondelete="CASCADE"
+        ),
         nullable=False
     )
     title: Mapped[str] = mapped_column(

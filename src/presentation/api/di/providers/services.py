@@ -5,7 +5,7 @@ from src.domain.blog.usecases import (
     PostServices
 )
 
-from src.dal.db.uow import UnitOfWork
+from src.infrastructure.db.uow import UnitOfWork
 from src.presentation.api.di.providers.db import uow_provider
 
 

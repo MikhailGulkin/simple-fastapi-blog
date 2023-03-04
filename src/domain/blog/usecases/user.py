@@ -3,9 +3,10 @@ from src.domain.blog.dto.user import (
     UserDTO,
     UpdateUserDTO
 )
+from src.domain.blog.exceptions import UserNotExists
 from src.domain.blog.interfaces import UserUseCase
 
-from src.dal.db.uow import UnitOfWork
+from src.infrastructure.db.uow import UnitOfWork
 
 
 class CreateUser(UserUseCase):
@@ -43,6 +44,19 @@ class UpdateUser(UserUseCase):
         await self.uow.commit()
 
 
+class DeleteUser(UserUseCase):
+    async def __call__(self, id_: int) -> None:
+        if await self.uow.blog_holder.user_repo.get_user_by_id(
+                id_
+        ):
+            await self.uow.blog_holder.user_repo.delete_user(
+                id_
+            )
+            await self.uow.commit()
+            return
+        raise UserNotExists
+
+
 class UserServices:
     def __init__(self, uow: UnitOfWork) -> None:
         self.uow = uow
@@ -62,3 +76,9 @@ class UserServices:
     ) -> UserDTO:
         await UpdateUser(self.uow)(update_user_dto)
         return await GetUserById(self.uow)(update_user_dto.id)
+
+    async def delete_user(
+            self,
+            id_: int
+    ) -> None:
+        await DeleteUser(self.uow)(id_)

@@ -59,25 +59,25 @@ async def get_post_by_id(
         return NotFoundPostError()
 
 
-@router.patch('/update-post')
+@router.patch('/update-post/{post_id}')
 async def update_post(
-        id_: int,
+        post_id: int,
         post: UpdatePostRequest,
         post_services: PostServices = Depends(get_post_services)
 ) -> PostDTO:
     return await post_services.update_post(
-        UpdatePostDTO(id=id_, **post.dict())
+        UpdatePostDTO(id=post_id, **post.dict())
     )
 
 
-@router.delete('/delete-post')
+@router.delete('/delete-post/{post_id}')
 async def delete_post(
-        id_: int,
+        post_id: int,
         response: Response,
         post_services: PostServices = Depends(get_post_services)
 ) -> PostDeleteResponse | NotFoundPostError:
     try:
-        await post_services.delete_post(id_)
+        await post_services.delete_post(post_id)
         return PostDeleteResponse()
     except PostNotExists:
         response.status_code = status.HTTP_404_NOT_FOUND

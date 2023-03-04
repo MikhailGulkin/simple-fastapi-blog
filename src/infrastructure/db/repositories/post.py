@@ -2,8 +2,8 @@ from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.domain.blog.dto import CreatePostDTO
-from src.dal.db.models import Post
-from src.dal.db.repositories.base import BaseRepository
+from src.infrastructure.db.models import Post
+from src.infrastructure.db.repositories.base import BaseRepository
 
 
 class PostRepository(BaseRepository[Post]):

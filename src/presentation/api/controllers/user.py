@@ -1,4 +1,8 @@
-from fastapi import APIRouter
+from fastapi import (
+    APIRouter,
+    Response,
+    status
+)
 from fastapi.params import Depends
 
 from src.domain.blog.dto import (
@@ -6,12 +10,16 @@ from src.domain.blog.dto import (
     UserDTO,
     UpdateUserDTO
 )
+from src.domain.blog.exceptions import UserNotExists
 from src.domain.blog.usecases import UserServices
 
 from src.presentation.api.controllers.requests.user import (
     CreateUserRequest,
     UpdateUserRequest
 )
+from src.presentation.api.controllers.responses import UserDeleteResponse
+from src.presentation.api.controllers.responses.exceptions import \
+    NotFoundUserError
 from src.presentation.api.di.providers.services import (
     get_user_services
 )
@@ -55,3 +63,17 @@ async def update_user(
     return await user_services.update_user(
         UpdateUserDTO(id=id_, **user.dict())
     )
+
+
+@router.delete('/delete-post/{user_id}')
+async def delete_post(
+        user_id: int,
+        response: Response,
+        user_services: UserServices = Depends(get_user_services)
+) -> UserDeleteResponse | NotFoundUserError:
+    try:
+        await user_services.delete_user(user_id)
+        return UserDeleteResponse()
+    except UserNotExists:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return NotFoundUserError()
