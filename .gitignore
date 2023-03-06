@@ -4,3 +4,5 @@ __pycache__
 .dev.env
 *.png
 *.jpg
+.pytest_cache
+.test.env

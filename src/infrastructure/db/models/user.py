@@ -19,7 +19,7 @@ class User(BaseAlchemyModels):
         unique=True
     )
     email: Mapped[str] = mapped_column(
-        String(255),
+        String(256),
         nullable=False,
         unique=True
     )
