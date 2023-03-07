@@ -10,6 +10,3 @@ class UserAdmin(ModelView, model=User):
         User.email,
         User.password,
     ]
-
-    def __str__(self):
-        return f'{User.id} - {User.username}'

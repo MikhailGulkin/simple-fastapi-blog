@@ -18,8 +18,6 @@ FROM build_app as prod
 ENV PROD 1
 RUN poetry install --without dev
 
-
-
 CMD alembic upgrade head && python -m src.presentation.api.main
 
 

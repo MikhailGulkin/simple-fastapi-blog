@@ -4,7 +4,7 @@ from collections.abc import (
     Generator
 )
 from typing import Any
-
+from sqlalchemy import text
 import pytest
 import pytest_asyncio
 
@@ -47,22 +47,6 @@ def build_test_app() -> FastAPI:
     return app
 
 
-@pytest.fixture(scope="session")
-def event_loop() -> Generator:
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
-
-
-@pytest_asyncio.fixture(scope="function")
-async def client() -> AsyncGenerator[AsyncClient, Any]:
-    async with AsyncClient(
-            app=build_test_app(),
-            base_url="http://test"
-    ) as client_:
-        yield client_
-
-
 @pytest_asyncio.fixture(scope="session")
 async def db_session_test() -> sessionmaker:
     yield build_sessions(
@@ -73,3 +57,27 @@ async def db_session_test() -> sessionmaker:
     close_all_sessions()
 
 
+@pytest.fixture(scope="session")
+def event_loop() -> Generator:
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
+
+
+@pytest_asyncio.fixture(scope="function", autouse=True)
+async def clean_tables(db_session_test):
+    tables = ("user_table", "post_table")
+    async with db_session_test() as session:
+        for table in tables:
+            statement = text(f"""TRUNCATE TABLE {table} CASCADE;""")
+            await session.execute(statement)
+            await session.commit()
+
+
+@pytest_asyncio.fixture(scope="function")
+async def client() -> AsyncGenerator[AsyncClient, Any]:
+    async with AsyncClient(
+            app=build_test_app(),
+            base_url="http://test"
+    ) as client_:
+        yield client_

@@ -35,10 +35,11 @@ router = APIRouter(
 @router.post('/create-post')
 async def create_user(
         post: CreatePostRequest,
+        response: Response,
         post_services: PostServices = Depends(get_post_services),
 ) -> PostDTO:
-    post = await post_services.create_post(CreatePostDTO(**post.dict()))
-    return post
+    response.status_code = status.HTTP_201_CREATED
+    return await post_services.create_post(CreatePostDTO(**post.dict()))
 
 
 @router.get('/get-all-post')
@@ -48,13 +49,13 @@ async def get_post_by_id(
     return await post_services.get_all_posts()
 
 
-@router.get('/get-post')
+@router.get('/get-post/{post_id}')
 async def get_post_by_id(
-        id_: int,
+        post_id: int,
         post_services: PostServices = Depends(get_post_services)
 ) -> PostDTO | NotFoundPostError:
     try:
-        return await post_services.get_post_by_id(id_)
+        return await post_services.get_post_by_id(post_id)
     except PostNotExists:
         return NotFoundPostError()
 
@@ -78,6 +79,7 @@ async def delete_post(
 ) -> PostDeleteResponse | NotFoundPostError:
     try:
         await post_services.delete_post(post_id)
+        response.status_code = status.HTTP_204_NO_CONTENT
         return PostDeleteResponse()
     except PostNotExists:
         response.status_code = status.HTTP_404_NOT_FOUND

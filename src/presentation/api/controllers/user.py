@@ -30,12 +30,12 @@ router = APIRouter(
 )
 
 
-@router.get('/get-user')
+@router.get('/get-user/{user_id}')
 async def get_user_by_id(
-        id_: int,
+        user_id: int,
         user_services: UserServices = Depends(get_user_services)
 ) -> UserDTO:
-    return await user_services.get_user_by_id(id_)
+    return await user_services.get_user_by_id(user_id)
 
 
 @router.get('/get-all-user')
@@ -49,23 +49,25 @@ async def get_all_users(
 @router.post('/create-user')
 async def create_user(
         user: CreateUserRequest,
+        response: Response,
         user_services: UserServices = Depends(get_user_services),
 ) -> UserDTO:
+    response.status_code = status.HTTP_201_CREATED
     return await user_services.create_user(CreateUserDTO(**user.dict()))
 
 
-@router.patch('/update-user')
+@router.patch('/update-user/{user_id}')
 async def update_user(
-        id_: int,
+        user_id: int,
         user: UpdateUserRequest,
         user_services: UserServices = Depends(get_user_services)
 ) -> UserDTO:
     return await user_services.update_user(
-        UpdateUserDTO(id=id_, **user.dict())
+        UpdateUserDTO(id=user_id, **user.dict())
     )
 
 
-@router.delete('/delete-post/{user_id}')
+@router.delete('/delete-user/{user_id}')
 async def delete_post(
         user_id: int,
         response: Response,
@@ -73,6 +75,7 @@ async def delete_post(
 ) -> UserDeleteResponse | NotFoundUserError:
     try:
         await user_services.delete_user(user_id)
+        response.status_code = status.HTTP_204_NO_CONTENT
         return UserDeleteResponse()
     except UserNotExists:
         response.status_code = status.HTTP_404_NOT_FOUND
