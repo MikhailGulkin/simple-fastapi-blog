@@ -1,10 +1,6 @@
 from fastapi import Depends
 
-from src.domain.blog.usecases import (
-    UserServices,
-    PostServices
-)
-
+from src.domain.blog.usecases import PostServices, UserServices
 from src.infrastructure.db.uow import UnitOfWork
 from src.presentation.api.di.providers.db import uow_provider
 

@@ -11,5 +11,3 @@ class UserNotExists(UserException):
     """User not exists error"""
 
     pass
-
-

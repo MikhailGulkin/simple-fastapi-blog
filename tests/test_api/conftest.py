@@ -3,19 +3,13 @@ import pytest_asyncio
 from sqlalchemy import insert
 from sqlalchemy.orm import sessionmaker
 
-from src.infrastructure.db.models import (
-    User,
-    Post
-)
+from src.infrastructure.db.models import Post, User
 
 
 @pytest_asyncio.fixture(scope="function")
 async def create_user_in_database(db_session_test: sessionmaker):
     async def create_user_in_database_wrap(
-            user_id: int,
-            username: str,
-            email: str,
-            password: str
+        user_id: int, username: str, email: str, password: str
     ):
         async with db_session_test() as session:
             await session.execute(
@@ -23,7 +17,7 @@ async def create_user_in_database(db_session_test: sessionmaker):
                     id=user_id,
                     username=username,
                     email=email,
-                    password=password
+                    password=password,
                 )
             )
             await session.commit()
@@ -34,21 +28,21 @@ async def create_user_in_database(db_session_test: sessionmaker):
 @pytest.fixture
 def user_data():
     return {
-        'user_id': 1,
+        "user_id": 1,
         "username": "string",
         "email": "string",
-        "password": "string"
+        "password": "string",
     }
 
 
 @pytest_asyncio.fixture(scope="function")
 async def create_post_in_database(db_session_test: sessionmaker):
     async def create_post_in_database_wrap(
-            post_id: int,
-            author_id: int,
-            title: str,
-            summary: str,
-            body: str,
+        post_id: int,
+        author_id: int,
+        title: str,
+        summary: str,
+        body: str,
     ):
         async with db_session_test() as session:
             await session.execute(
@@ -57,7 +51,7 @@ async def create_post_in_database(db_session_test: sessionmaker):
                     author_id=author_id,
                     title=title,
                     summary=summary,
-                    body=body
+                    body=body,
                 )
             )
             await session.commit()
@@ -68,9 +62,9 @@ async def create_post_in_database(db_session_test: sessionmaker):
 @pytest.fixture
 def post_data():
     return {
-        'post_id': 1,
+        "post_id": 1,
         "author_id": 1,
         "title": "string",
         "summary": "string",
-        "body": "string"
+        "body": "string",
     }

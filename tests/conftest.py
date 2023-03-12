@@ -1,26 +1,16 @@
 import asyncio
-from collections.abc import (
-    AsyncGenerator,
-    Generator
-)
+from collections.abc import AsyncGenerator, Generator
 from typing import Any
-from sqlalchemy import text
+
 import pytest
 import pytest_asyncio
-
 from fastapi import FastAPI
 from httpx import AsyncClient
+from sqlalchemy import text
+from sqlalchemy.orm import close_all_sessions, sessionmaker
 
-from sqlalchemy.orm import (
-    close_all_sessions,
-    sessionmaker
-)
-
-from src.infrastructure.db.main import (
-    create_engine,
-    build_sessions
-)
 from src.config import get_settings
+from src.infrastructure.db.main import build_sessions, create_engine
 from src.presentation.api.controllers import setup_controllers
 from src.presentation.api.di import setup_di
 
@@ -31,16 +21,9 @@ def build_test_app() -> FastAPI:
     app = FastAPI()
     settings = get_settings()
 
-    db_engine = create_engine(
-        settings.DB_URL
-    )
+    db_engine = create_engine(settings.DB_URL)
 
-    setup_di(
-        app,
-        build_sessions(
-            db_engine
-        )
-    )
+    setup_di(app, build_sessions(db_engine))
 
     setup_controllers(app.router)
 
@@ -49,11 +32,7 @@ def build_test_app() -> FastAPI:
 
 @pytest_asyncio.fixture(scope="session")
 async def db_session_test() -> sessionmaker:
-    yield build_sessions(
-        create_engine(
-            get_settings().DB_URL
-        )
-    )
+    yield build_sessions(create_engine(get_settings().DB_URL))
     close_all_sessions()
 
 
@@ -65,7 +44,7 @@ def event_loop() -> Generator:
 
 
 @pytest_asyncio.fixture(scope="function", autouse=True)
-async def clean_tables(db_session_test):
+async def clean_tables(db_session_test) -> None:
     tables = ("user_table", "post_table")
     async with db_session_test() as session:
         for table in tables:
@@ -76,8 +55,5 @@ async def clean_tables(db_session_test):
 
 @pytest_asyncio.fixture(scope="function")
 async def client() -> AsyncGenerator[AsyncClient, Any]:
-    async with AsyncClient(
-            app=build_test_app(),
-            base_url="http://test"
-    ) as client_:
+    async with AsyncClient(app=build_test_app(), base_url="http://test") as client_:
         yield client_

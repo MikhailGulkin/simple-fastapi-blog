@@ -1,58 +1,40 @@
-from fastapi import (
-    APIRouter,
-    Response,
-    status
-)
+from fastapi import APIRouter, Response, status
 from fastapi.params import Depends
 
-from src.domain.blog.dto import (
-    CreatePostDTO,
-    PostDTO,
-    UpdatePostDTO
-
-)
+from src.domain.blog.dto import CreatePostDTO, PostDTO, UpdatePostDTO
 from src.domain.blog.exceptions import PostNotExists
 from src.domain.blog.usecases import PostServices
-
 from src.presentation.api.controllers.requests import (
     CreatePostRequest,
     UpdatePostRequest,
 )
 from src.presentation.api.controllers.responses import PostDeleteResponse
-from src.presentation.api.controllers.responses.exceptions import (
-    NotFoundPostError
-)
-from src.presentation.api.di.providers.services import (
-    get_post_services
-)
+from src.presentation.api.controllers.responses.exceptions import NotFoundPostError
+from src.presentation.api.di.providers.services import get_post_services
 
-router = APIRouter(
-    prefix='/post',
-    tags=['post']
-)
+router = APIRouter(prefix="/post", tags=["post"])
 
 
-@router.post('/create-post')
+@router.post("/create-post")
 async def create_user(
-        post: CreatePostRequest,
-        response: Response,
-        post_services: PostServices = Depends(get_post_services),
+    post: CreatePostRequest,
+    response: Response,
+    post_services: PostServices = Depends(get_post_services),
 ) -> PostDTO:
     response.status_code = status.HTTP_201_CREATED
     return await post_services.create_post(CreatePostDTO(**post.dict()))
 
 
-@router.get('/get-all-post')
-async def get_post_by_id(
-        post_services: PostServices = Depends(get_post_services)
+@router.get("/get-all-post")
+async def get_all_posts(
+    post_services: PostServices = Depends(get_post_services),
 ) -> list[PostDTO]:
     return await post_services.get_all_posts()
 
 
-@router.get('/get-post/{post_id}')
+@router.get("/get-post/{post_id}")
 async def get_post_by_id(
-        post_id: int,
-        post_services: PostServices = Depends(get_post_services)
+    post_id: int, post_services: PostServices = Depends(get_post_services)
 ) -> PostDTO | NotFoundPostError:
     try:
         return await post_services.get_post_by_id(post_id)
@@ -60,22 +42,20 @@ async def get_post_by_id(
         return NotFoundPostError()
 
 
-@router.patch('/update-post/{post_id}')
+@router.patch("/update-post/{post_id}")
 async def update_post(
-        post_id: int,
-        post: UpdatePostRequest,
-        post_services: PostServices = Depends(get_post_services)
+    post_id: int,
+    post: UpdatePostRequest,
+    post_services: PostServices = Depends(get_post_services),
 ) -> PostDTO:
-    return await post_services.update_post(
-        UpdatePostDTO(id=post_id, **post.dict())
-    )
+    return await post_services.update_post(UpdatePostDTO(id=post_id, **post.dict()))
 
 
-@router.delete('/delete-post/{post_id}')
+@router.delete("/delete-post/{post_id}")
 async def delete_post(
-        post_id: int,
-        response: Response,
-        post_services: PostServices = Depends(get_post_services)
+    post_id: int,
+    response: Response,
+    post_services: PostServices = Depends(get_post_services),
 ) -> PostDeleteResponse | NotFoundPostError:
     try:
         await post_services.delete_post(post_id)

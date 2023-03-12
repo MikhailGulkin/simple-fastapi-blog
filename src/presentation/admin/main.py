@@ -6,8 +6,5 @@ from src.infrastructure.admin import setup_admin_models
 
 
 def create_admin_instance(app: FastAPI, engine: AsyncEngine):
-    admin = Admin(
-        app,
-        engine
-    )
+    admin = Admin(app, engine)
     setup_admin_models(admin)

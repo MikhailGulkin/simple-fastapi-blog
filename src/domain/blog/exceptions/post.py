@@ -11,5 +11,3 @@ class PostNotExists(PostException):
     """Post not exists error"""
 
     pass
-
-
